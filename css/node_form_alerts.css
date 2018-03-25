@@ -1,0 +1,22 @@
+.single-node-form-message {
+  background-color: #0f68f3;
+  color: #FFF;
+  padding: 12px 20px;
+  margin: 16px 0;
+  font-weight: bold;
+  border: 1px solid #7f7f7f;
+  font-size: 14px;
+  line-height: 17px;
+  -webkit-box-shadow: -1px 2px 18px -1px rgba(0,0,0,0.42);
+  -moz-box-shadow: -1px 2px 18px -1px rgba(0,0,0,0.42);
+  box-shadow: -1px 2px 18px -1px rgba(0,0,0,0.42);
+}
+
+.single-node-form-message a{
+  color: #FFF;
+  text-decoration: underline;
+}
+
+.single-node-form-message a:hover {
+  color: #daf5ff;
+}

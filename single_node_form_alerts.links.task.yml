@@ -1,0 +1,9 @@
+node_form_alert:
+  route_name: single_node_form_alerts.node_form_alert
+  base_route: entity.node.canonical
+  title: Form Messages
+  weight: 10
+#  requirements:
+#      _permission: 'edit node form alerts'
+
+

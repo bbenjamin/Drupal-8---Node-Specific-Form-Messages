@@ -1,0 +1,14 @@
+single_node_form_alerts.node_form_alert:
+  path: 'node/{node}/form_messages'
+  defaults:
+    _form: '\Drupal\single_node_form_alerts\Form\NodeFormMessage'
+    _title_callback: '\Drupal\single_node_form_alerts\Form\NodeFormMessage::title'
+  requirements:
+    _permission: 'edit node form alerts'
+  options:
+    _admin_route: TRUE
+    parameters:
+      node:
+        type: entity:node
+
+

@@ -1,0 +1,5 @@
+name: Single Node Form Alerts
+type: module
+description: Provide alerts on node forms specific to a single node
+core: 8.x
+package: Custom

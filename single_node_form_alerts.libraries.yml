@@ -1,0 +1,5 @@
+node_form_alerts:
+  version: VERSION
+  css:
+    theme:
+      css/node_form_alerts.css: {}
