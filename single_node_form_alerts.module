@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Implements hook_help().
@@ -26,31 +27,37 @@ function single_node_form_alerts_help($route_name, RouteMatchInterface $route_ma
 /**
  * Implements hook_form_BASE_FORM_ID_alter().
  */
-function single_node_form_alerts_form_node_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id)
+function single_node_form_alerts_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id)
 {
   $node = $form_state->getFormObject()->getEntity();
-  $message_config = \Drupal::state()->get('single_node_form_alerts.node_'.$node->id(), []);
+  $message_config = \Drupal::state()->get('single_node_form_alerts.node_' . $node->id(), []);
   $form['#attached']['library'][] = 'single_node_form_alerts/node_form_alerts';
 
 
-  if(!empty($message_config['top_message'])){
+  if (!empty($message_config['top_message'])) {
     $msg = !empty($form['#prefix']) ? $form['#prefix'] : '';
     $form['#prefix'] = $msg.format_node_form_message($message_config['top_message']);
   }
 
-  if(!empty($message_config['bottom_message'])) {
+  if (!empty($message_config['bottom_message'])) {
     $msg = !empty($form['actions']['#prefix']) ? $form['actions']['#prefix'] : '';
     $form['actions']['#prefix'] = format_node_form_message($message_config['bottom_message']) . $msg;
   }
-  foreach($message_config as $k => $v){
+  foreach ($message_config as $k => $v) {
     $key = str_replace('_message', '', $k);
-    if(isset($form[$key])) {
+    if (isset($form[$key])) {
       $msg = !empty($form[$key]['#prefix']) ? $form[$key]['#prefix'] : '';
-      $form[$key]['#prefix'] = $msg.format_node_form_message($v);
+      $form[$key]['#prefix'] = $msg . format_node_form_message($v);
     }
   }
 }
 
-function format_node_form_message( $message) {
- return sprintf('<div class="single-node-form-message">%s</div>', strip_tags($message,'<p><a><b><i><br>'));
+/**
+ * @param string $message
+ *   The saved message for the field.
+ * @return string
+ *   It is wrapped in div to show as a very visible block of text.
+ */
+function format_node_form_message($message) {
+  return sprintf('<div class="single-node-form-message">%s</div>', strip_tags($message, '<p><a><b><i><br>'));
 }

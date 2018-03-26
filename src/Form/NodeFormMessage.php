@@ -20,22 +20,22 @@ class NodeFormMessage extends ConfigFormBase {
    * @var \Drupal\Core\Entity\EntityFieldManager
    */
   protected $entityFieldManager;
+
   /**
    * Constructs a new NodeFormMessage object.
    */
-
   public function __construct(
     ConfigFactoryInterface $config_factory,
       EntityFieldManager $entity_field_manager
     ) {
     parent::__construct($config_factory);
-        $this->entityFieldManager = $entity_field_manager;
+    $this->entityFieldManager = $entity_field_manager;
   }
 
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('config.factory'),
-            $container->get('entity_field.manager')
+      $container->get('entity_field.manager')
     );
   }
 
@@ -58,13 +58,13 @@ class NodeFormMessage extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, NodeInterface $node = null) {
+  public function buildForm(array $form, FormStateInterface $form_state, NodeInterface $node = NULL) {
 
     $nid = $node->id();
-    $state_id = 'single_node_form_alerts.node_'.$nid;
+    $state_id = 'single_node_form_alerts.node_' . $nid;
     $config = \Drupal::state()->get($state_id);
 
-    $form['title']['#markup'] = '<h2>'.$this->t('Edit node form messages for @title', ['@title' => $node->getTitle()]).'</h2>';
+    $form['title']['#markup'] = '<h2>' . $this->t('Edit node form messages for @title', ['@title' => $node->getTitle()]) . '</h2>';
     $form['title']['#description'] = 'To remove a message, set it to empty in this form and save';
 
     $form['node_id'] = array(
@@ -73,15 +73,15 @@ class NodeFormMessage extends ConfigFormBase {
     );
 
     $fd = \Drupal::service('entity_field.manager')->getFieldDefinitions('node', $node->getType());
-    $node_fields = array_filter($fd, function($a){
-      if(method_exists($a, 'getEntityTypeId') && $a->getEntityTypeId() == 'field_config'){
-        return true;
+    $node_fields = array_filter($fd, function ($a) {
+      if (method_exists($a, 'getEntityTypeId') && $a->getEntityTypeId() == 'field_config') {
+        return TRUE;
       }
     });
 
     $textfield = [
       '#type' => 'textarea',
-      '#title' => t('Message Content')
+      '#title' => t('Message Content'),
     ];
 
     $form['top'] = [
@@ -93,14 +93,14 @@ class NodeFormMessage extends ConfigFormBase {
     $form['top']['top_message'] = $textfield;
     $form['top']['top_message']['#default_value'] = !empty($config['top_message']) ? $config['top_message'] : '';
 
-    foreach($node_fields as $fieldname => $field) {
+    foreach ($node_fields as $fieldname => $field) {
       $form[$fieldname] = [
         '#type' => 'details',
         '#title' => t('Message for @label', ['@label' => $field->label()]),
         '#open' => FALSE,
       ];
-      $form[$fieldname][$fieldname.'_message'] = $textfield;
-      $form[$fieldname][$fieldname.'_message']['#default_value'] = !empty($config[$fieldname.'_message']) ? $config[$fieldname.'_message'] : '';
+      $form[$fieldname][$fieldname . '_message'] = $textfield;
+      $form[$fieldname][$fieldname . '_message']['#default_value'] = !empty($config[$fieldname . '_message']) ? $config[$fieldname . '_message'] : '';
     }
 
     $form['bottom'] = [
@@ -127,15 +127,24 @@ class NodeFormMessage extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
     $values = $form_state->getValues();
-    $state_id = 'single_node_form_alerts.node_'.$values['node_id'];
+    $state_id = 'single_node_form_alerts.node_' . $values['node_id'];
     $message_config = array_filter($values, function ($v, $k) {
-      if(!is_object($v) && !empty($v) && strpos($k, 'message') !== false) {
-        return true;
+      if (!is_object($v) && !empty($v) && strpos($k, 'message') !== FALSE) {
+        return TRUE;
       }
-    }, ARRAY_FILTER_USE_BOTH );
+    }, ARRAY_FILTER_USE_BOTH);
     \Drupal::state()->set($state_id, $message_config);
   }
 
+  /**
+   * Form title include the title of the node it is adding to.
+   *
+   * @param \Drupal\node\NodeInterface $node
+   *   The node being edited.
+   *
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+   *   The title of the form, which includes the node title.
+   */
   public function title(NodeInterface $node) {
     return t('Form Messages for @title', ['@title' => $node->getTitle()]);
   }
